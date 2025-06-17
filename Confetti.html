@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Realistic Confetti Animation</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #111;
+    }
+    .confetti {
+      position: absolute;
+      background-color: red;
+      opacity: 0.9;
+      transform-origin: center;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  const colors = ['red', 'green', 'blue', 'pink'];
+  const confettiCount = 130;
+  const confettiElements = [];
+
+  for (let i = 0; i < confettiCount; i++) {
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    const width = 4 + Math.random() * 4;   // rectangle width
+    const height = 8 + Math.random() * 8;  // rectangle height
+    confetti.style.width = width + 'px';
+    confetti.style.height = height + 'px';
+    confetti.style.left = (Math.random() * window.innerWidth) + 'px';
+    confetti.style.top = window.innerHeight + 'px';
+    confetti.velocityY = - (11 + Math.random() * 9);
+    confetti.velocityX = (Math.random() - 0.5) * 6;
+    confetti.gravity = 0.3 + Math.random() * 0.1;
+    confetti.rotation = Math.random() * 360;
+    confetti.rotationSpeed = (Math.random() - 0.5) * 10;
+    confettiElements.push(confetti);
+    document.body.appendChild(confetti);
+  }
+
+  function animateConfetti() {
+    let stillAnimating = false;
+
+    confettiElements.forEach(confetti => {
+      let top = parseFloat(confetti.style.top);
+      let left = parseFloat(confetti.style.left);
+
+      confetti.velocityY += confetti.gravity;
+      top += confetti.velocityY;
+      left += confetti.velocityX;
+
+      confetti.rotation += confetti.rotationSpeed;
+      confetti.style.transform = `rotate(${confetti.rotation}deg)`;
+
+      if (top < window.innerHeight) stillAnimating = true;
+      else top = window.innerHeight;
+
+      confetti.style.top = top + 'px';
+      confetti.style.left = left + 'px';
+    });
+
+    if (stillAnimating) {
+      requestAnimationFrame(animateConfetti);
+    }
+  }
+
+  animateConfetti();
+</script>
+
+</body>
+</html>
